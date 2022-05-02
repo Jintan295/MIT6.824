@@ -82,7 +82,7 @@ func handleMap(task Task, mapf MapFunc) error {
 	KV := mapf(filename, string(content))
 	var encoders []*json.Encoder
 	for i := 0; i < task.NReduce; i++ {
-		// 为每个Reduce worker都copy一份
+		// 为每个Reduce worker创建一个临时文件
 		f, err := os.Create(fmt.Sprintf("mr-%d-%d", task.Map.Id, i))
 		if err != nil {
 			log.Fatalf("cannot create intermediate result file")
@@ -179,7 +179,7 @@ func CallExample() {
 	// the "Coordinator.Example" tells the
 	// receiving server that we'd like to call
 	// the Example() method of struct Coordinator.
-	ok := call("Coordinator.Example", &args, &reply)
+	ok := call("Master.Example", &args, &reply)
 	if ok {
 		// reply.Y should be 100.
 		fmt.Printf("reply.Y %v\n", reply.Y)
